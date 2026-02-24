@@ -43,7 +43,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="block mb-1">Konfirmasi Password</label>
+                <label class="block mb-1">Konfirmasi Password </label>
                 <input type="password" 
                        name="password_confirmation"
                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
