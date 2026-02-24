@@ -19,13 +19,15 @@ class RegisterController extends Controller
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users,email',
             'password'=>'required|min:6|confirmed',
+            'alamat'=>'required',
         ]);
 
         User::create([
             'name'=>$request->name,
             'email'=>$request->email,
             'password'=>Hash::make($request->password),
-            'role'=>'peminjam' // default role
+            'role'=>'peminjam', // default role
+            'alamat'=>$request->alamat,
         ]);
         return redirect()-> route('login')->with('succsess', 'Register Berhasil Silahkan Login');
     }
