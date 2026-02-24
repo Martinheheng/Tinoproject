@@ -61,7 +61,7 @@ Route::get('/petugas/dashboard', fn() => view('petugas.dashboard'));
 });
 
 Route::middleware(['auth', 'role:peminjam'])->group(function () {
-Route::get('/peminjam/dashboard', fn() => view('peminjam.dashboard'));
+    Route::get('/peminjam/dashboard', fn() => view('peminjam.dashboard'))->name('peminjam.dashboard');
 });
 
 
