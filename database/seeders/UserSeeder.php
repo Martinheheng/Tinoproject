@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'nama'      => 'admin',
+            'name'      => 'admin',
             'email'     => 'admin@fishgear.com',
             'password'  => bcrypt('admin123'),
             'role'      => 'admin',

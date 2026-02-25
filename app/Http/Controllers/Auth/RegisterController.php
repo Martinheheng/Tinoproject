@@ -29,6 +29,6 @@ class RegisterController extends Controller
             'role'=>'peminjam', // default role
             'alamat'=>$request->alamat,
         ]);
-        return redirect()-> route('login')->with('succsess', 'Register Berhasil Silahkan Login');
+        return redirect()-> route('login')->with('success', 'Register Berhasil Silahkan Login');
     }
 }

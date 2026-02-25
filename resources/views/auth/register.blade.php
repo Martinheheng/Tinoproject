@@ -14,19 +14,19 @@
                 Register
             </h1>
 
-            <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-[18px]">
+            <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-[18px]">
                 @csrf
 
                 <!-- Username -->
                 <input
                     type="text"
-                    name="username"
+                    name="name"
                     value="{{ old('username') }}"
                     placeholder="Masukan Nama Pengguna"
                     class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
                     required
                 />
-                @error('username')
+                @error('name')
                     <span class="text-red-500 text-xs">{{ $message }}</span>
                 @enderror
 
@@ -63,6 +63,17 @@
                     class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
                     required
                 />
+                <input
+                    type="text"
+                    name="alamat"
+                    value="{{ old('alamat') }}"
+                    placeholder="Masukan Alamat"
+                    class="w-full h-[51px] rounded-[15px] border border-black bg-white px-[13px] text-[13px] font-medium"
+                    required
+                />
+                @error('alamat')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
 
                 <!-- Already have account -->
                 <p class="text-[13px] font-medium font-inter text-black pl-[1px]">
@@ -78,7 +89,12 @@
                     class="register-btn w-full h-[49px] rounded-[20px] border border-black/80 text-white font-bold text-[24px] font-inter leading-normal mt-1 hover:opacity-90 active:opacity-80 transition-opacity cursor-pointer"
                 >
                     Register
-                </button>
+                    </button>
+                    @if(session('success'))
+                    <div class="bg-green-500 text-white p-3 rounded mb-4 text-sm">
+                        {{ session('success') }}
+                    </div>
+                @endif
             </form>
         </div>
     </div>
