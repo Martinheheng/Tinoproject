@@ -60,8 +60,15 @@ Route::middleware(['auth', 'role:petugas'])->group(function () {
 Route::get('/petugas/dashboard', fn() => view('petugas.dashboard'));
 });
 
-Route::middleware(['auth', 'role:peminjam'])->group(function () {
-    Route::get('/peminjam/dashboard', fn() => view('peminjam.dashboard'))->name('peminjam.dashboard');
+Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
+    Route::get('/dashboard', fn() => view('peminjam.dashboard'))->name('dashboard');
+    Route::get('/detail-alat/{id_alat}/{id_variant}', fn() => view('peminjam.detail-alat'))->name('detail-alat');
+    Route::get('/proses-penyewaan/{id_alat}/{id_variant}/{qty}', fn() => view('peminjam.proses-penyewaan'))->name('proses-penyewaan');
+
+    Route::get('/transaksi-berhasil/{id_transaksi}', fn() => view('peminjam.transaksi-berhasil'))->name('transaksi-berhasil');
+    Route::get('/transaksi', fn() => view('peminjam.riwayat-penyewaan'))->name('riwayat-penyewaan');
+
+    Route::get('/keranjang', fn() => view('peminjam.keranjang'))->name('keranjang');
 });
 
 
