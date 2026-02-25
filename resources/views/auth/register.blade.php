@@ -1,71 +1,86 @@
-@extends('layouts.app')
-
-@section('content')
-
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white p-8 rounded-xl shadow-md w-96">
-
-        <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
-
-        @if($errors->any())
-            <div class="mb-4 text-red-500 text-sm">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('register.store') }}">
-            @csrf
-
-            <div class="mb-4">
-                <label class="block mb-1">Nama</label>
-                <input type="text" 
-                       name="name"
-                       value="{{ old('name') }}"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                       required>
-            </div>
-
-            <div class="mb-4">
-                <label class="block mb-1">Email</label>
-                <input type="email" 
-                       name="email"
-                       value="{{ old('email') }}"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                       required>
-            </div>
-
-            <div class="mb-4">
-                <label class="block mb-1">Password</label>
-                <input type="password" 
-                       name="password"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                       required>
-            </div>
-
-            <div class="mb-4">
-                <label class="block mb-1">Konfirmasi Password </label>
-                <input type="password" 
-                       name="password_confirmation"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                       required>
-            </div>
-
-            <div class="mb-6">
-                <label class="block mb-1">Alamat</label>
-                <input type="text" 
-                       name="alamat"
-                       value="{{ old('alamat') }}"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                       required>
-            </div>
-
-            <button type="submit"
-                    class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    @vite('resources/css/app.css')
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="min-h-screen w-full flex items-center justify-center bg-cover bg-center px-4 py-10" style="background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/518b7cf41667e20219ed2a137f96d46d1e6782aa?width=2880');">
+        <div class="register-card w-full max-w-[500px] rounded-[25px] border border-black shadow-[0_4px_8px_5px_rgba(0,0,0,0.25)] px-[52px] py-[54px] flex flex-col">
+            <h1 class="text-white font-bold text-[48px] leading-normal text-center mb-[54px] font-inter">
                 Register
-            </button>
-        </form>
+            </h1>
 
+            <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-[18px]">
+                @csrf
+
+                <!-- Username -->
+                <input
+                    type="text"
+                    name="username"
+                    value="{{ old('username') }}"
+                    placeholder="Masukan Nama Pengguna"
+                    class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+                @error('username')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
+
+                <!-- Email -->
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    placeholder="Masukan Email"
+                    class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+                @error('email')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
+
+                <!-- Password -->
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Masukan Password"
+                    class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+                @error('password')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
+
+                <!-- Confirm Password -->
+                <input
+                    type="password"
+                    name="password_confirmation"
+                    placeholder="Konfirmasi Password"
+                    class="w-full h-[51px] rounded-[15px] border border-black bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] px-[13px] text-[13px] font-medium font-inter text-black/80 placeholder:text-black/80 outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+
+                <!-- Already have account -->
+                <p class="text-[13px] font-medium font-inter text-black pl-[1px]">
+                    Sudah Punya Akun?
+                    <a href="{{ route('login') }}" class="text-cyan-500 hover:text-cyan-600 transition-colors">
+                        Masuk Sekarang
+                    </a>
+                </p>
+
+                <!-- Register Button -->
+                <button
+                    type="submit"
+                    class="register-btn w-full h-[49px] rounded-[20px] border border-black/80 text-white font-bold text-[24px] font-inter leading-normal mt-1 hover:opacity-90 active:opacity-80 transition-opacity cursor-pointer"
+                >
+                    Register
+                </button>
+            </form>
+        </div>
     </div>
-</div>
-
-@endsection
+</body>
+</html>

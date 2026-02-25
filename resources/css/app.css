@@ -1,1 +1,27 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-inter {
+    font-family: 'Inter', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.register-card {
+    background: linear-gradient(270deg, rgba(0, 245, 139, 0.70) 0%, rgba(54, 234, 240, 0.70) 100%);
+}
+
+.register-btn {
+    background: linear-gradient(270deg, #40D884 0%, #3097CA 100%);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}

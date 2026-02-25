@@ -31,9 +31,7 @@ Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.process');
 
 Route::get('/register', [RegisterController::class, 'showRegister'])->name('register');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
 //ROUTE ADMIN 
 Route::middleware(['auth', 'role:admin'])->group(function() {
     Route::resource('admin/alat', AlatController::class);

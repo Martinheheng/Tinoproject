@@ -1,96 +1,96 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    @vite('resources/css/app.css')
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="relative min-h-screen flex items-center justify-center">
 
-@section('content')
+    <!-- Background Image -->
+    <div class="absolute inset-0 bg-cover bg-center"
+         style="background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/518b7cf41667e20219ed2a137f96d46d1e6782aa?width=2880');">
+    </div>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-    <div class="w-full max-w-md space-y-8">
+    <!-- Dark Overlay -->
+    <div class="absolute inset-0 bg-black/40"></div>
 
-        {{-- LOGO + TITLE --}}
-        <div class="text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 mb-4">
-                <!-- Icon Fish (SVG manual) -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 4c-4 0-7 3-7 6s3 6 7 6 7-3 7-6-3-6-7-6zM5 12l-2 2m16-2l2 2" />
-                </svg>
-            </div>
+    <!-- Content -->
+    <div class="relative z-10 w-full flex justify-center px-6 py-16">
 
-            <h1 class="text-3xl font-bold tracking-tight text-gray-800">
-                FishGear
+        <div class="w-full max-w-[500px]
+                    rounded-[25px]
+                    bg-[#D9D9D9]
+                    shadow-[0_25px_60px_rgba(0,0,0,0.4)]
+                    px-[52px] py-[64px]">
+
+            <h1 class="text-white font-bold text-[48px] text-center mb-[54px] font-inter">
+                Login
             </h1>
-            <p class="mt-1 text-gray-500">
-                Professional Fishing Gear Rental
-            </p>
-        </div>
 
-        {{-- CARD --}}
-        <div class="bg-white border border-gray-200 shadow-lg rounded-xl">
-            <form method="POST" action="{{ route('login.process') }}">
+            <form method="POST" action="{{ route('login.process') }}" class="flex flex-col gap-[18px]">
                 @csrf
 
-                <div class="p-6 border-b">
-                    <h2 class="text-xl font-semibold">Sign In</h2>
-                    <p class="text-sm text-gray-500">
-                        Masukkan data diri anda
-                    </p>
-                </div>
+                <!-- Email -->
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    placeholder="Masukan Email"
+                    class="w-full h-[51px] rounded-[15px] border border-black 
+                           bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] 
+                           px-[13px] text-[13px] font-medium font-inter 
+                           text-black/80 placeholder:text-black/80 
+                           outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+                @error('email')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
 
-                <div class="p-6 space-y-4">
+                <!-- Password -->
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Masukan Password"
+                    class="w-full h-[51px] rounded-[15px] border border-black 
+                           bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.25)] 
+                           px-[13px] text-[13px] font-medium font-inter 
+                           text-black/80 placeholder:text-black/80 
+                           outline-none focus:ring-2 focus:ring-teal-400/60"
+                    required
+                />
+                @error('password')
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
 
-                    {{-- EMAIL --}}
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="you@example.com"
-                            required
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                    </div>
+                <p class="text-[13px] font-medium font-inter text-black pl-[1px]">
+                    Lupa Password?
+                </p>
 
-                    {{-- PASSWORD --}}
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="••••••••"
-                            required
-                            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                    </div>
+                <p class="text-[13px] font-medium font-inter text-black pl-[1px]">
+                    Belum Punya Akun?
+                    <a href="{{ route('register') }}" class="text-cyan-500 hover:text-cyan-600 transition-colors">
+                        Daftar Sekarang
+                    </a>
+                </p>
 
-                    {{-- ERROR MESSAGE --}}
-                    @if($errors->any())
-                        <div class="text-red-500 text-sm">
-                            {{ $errors->first() }}
-                        </div>
-                    @endif
-
-                </div>
-
-                <div class="p-6 border-t flex flex-col gap-3">
-                    <button
-                        type="submit"
-                        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                    >
-                        Sign In
-                    </button>
-
-                    <p class="text-sm text-gray-500 text-center">
-                        Don't have an account?
-                        <a href="{{ route('register') }}"
-                           class="text-blue-600 font-medium hover:underline">
-                            Sign up
-                        </a>
-                    </p>
-                </div>
-
+                <button
+                    type="submit"
+                    class="w-full h-[49px] rounded-[20px] border border-black/80 
+                           text-white font-bold text-[24px] font-inter 
+                           leading-normal mt-1 
+                           bg-gradient-to-r from-[#40D884] to-[#3097CA]
+                           hover:opacity-90 active:opacity-80 
+                           transition-opacity cursor-pointer"
+                >
+                    Login
+                </button>
             </form>
+
         </div>
-
     </div>
-</div>
-
-@endsection
+</body>
+</html>
