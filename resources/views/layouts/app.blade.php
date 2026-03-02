@@ -47,7 +47,9 @@
                 </svg>
                 <span class="text-lg font-semibold">Filter</span>
             </button>
-            <img src="{{ asset('image/icon-keranjang.svg') }}" alt="icon keranjang" class="w-10 h-10">
+            <a href="{{ route('peminjam.keranjang') }}">
+                <img src="{{ asset('image/icon-keranjang.svg') }}" alt="icon keranjang" class="w-10 h-10">
+            </a>
         </div>
 
         @auth

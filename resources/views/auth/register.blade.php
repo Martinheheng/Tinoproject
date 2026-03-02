@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth-layout')
 
 @section('content')
 
@@ -21,6 +21,15 @@
                 <input type="text" 
                        name="name"
                        value="{{ old('name') }}"
+                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                       required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block mb-1">Nomor Telepon</label>
+                <input type="text" 
+                       name="telepon"
+                       value="{{ old('telepon') }}"
                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                        required>
             </div>

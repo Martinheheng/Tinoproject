@@ -8,69 +8,8 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Peminjam\PeminjamanController;
 use App\Http\Controllers\Petugas\PeminjamanController as PetugasPeminjaman;
 use App\Http\Controllers\Admin\DashboardController;
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-//route dashboard admin
-Route::get('/admin/dashboard', 
-    [DashboardController::class, 'index'])
-    ->middleware(['auth','role:admin'])
-    ->name('admin.dashboard');
-// autentikas web login
-Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.process');
-
-Route::get('/register', [RegisterController::class, 'showRegister'])->name('register');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
-
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-//ROUTE ADMIN 
-Route::middleware(['auth', 'role:admin'])->group(function() {
-    Route::resource('admin/alat', AlatController::class);
-});
-Route::resource('admin/kategori', KategoriController::class);
-//Route petugas
-Route::middleware(['auth', 'role:petugas'])->group(function () {
-
-    Route::get('/petugas/peminjaman', 
-        [PetugasPeminjaman::class, 'index'])
-        ->name('petugas.peminjaman.index');
-
-    Route::post('/petugas/peminjaman/{id}/approve', 
-        [PetugasPeminjaman::class, 'approve'])
-        ->name('petugas.peminjaman.approve');
-
-    Route::post('/petugas/peminjaman/{id}/reject', 
-        [PetugasPeminjaman::class, 'reject'])
-        ->name('petugas.peminjaman.reject');
-
-});
-
-Route::middleware(['auth', 'role:petugas'])->group(function () {
-Route::get('/petugas/dashboard', fn() => view('petugas.dashboard'));
-});
-
-Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
-    Route::get('/dashboard', fn() => view('peminjam.dashboard'))->name('dashboard');
-    Route::get('/detail-alat/{id_alat}/{id_variant}', fn() => view('peminjam.detail-alat'))->name('detail-alat');
-    Route::get('/proses-penyewaan/{id_alat}/{id_variant}/{qty}', fn() => view('peminjam.proses-penyewaan'))->name('proses-penyewaan');
-
-    Route::get('/transaksi-berhasil/{id_transaksi}', fn() => view('peminjam.transaksi-berhasil'))->name('transaksi-berhasil');
-    Route::get('/transaksi', fn() => view('peminjam.riwayat-penyewaan'))->name('riwayat-penyewaan');
-
-    Route::get('/keranjang', fn() => view('peminjam.keranjang'))->name('keranjang');
-});
-
+use App\Http\Controllers\Peminjam\AlatController as PeminjamAlatController;
+use App\Http\Controllers\Peminjam\DashboardController as PeminjamDashboardController;
 
 
 Route::get('/', function () {
@@ -86,19 +25,43 @@ Route::get('/', function () {
     };
 
 });
-// route peminjaman
-Route::middleware(['auth', 'role:peminjam'])->group(function(){
 
-    Route::get('/peminjam/peminjaman', 
-        [PeminjamanController::class, 'index'])
-        ->name('peminjam.peminjaman.index');
+// autentikas web login
+Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.process');
+Route::get('/register', [RegisterController::class, 'showRegister'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/peminjam/peminjaman/{id}/create', 
-        [PeminjamanController::class, 'create'])
-        ->name('peminjam.peminjaman.create');
+//ROUTE ADMIN 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/alat', AlatController::class)->names('alat');
+    Route::resource('/kategori', KategoriController::class)->names('kategori');
+});
 
-    Route::post('/peminjam/peminjaman', 
-        [PeminjamanController::class, 'store'])
-        ->name('peminjam.peminjaman.store');
+//Route petugas
+Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
+    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/peminjaman', [PetugasPeminjaman::class, 'index'])->name('peminjaman.index');
+    Route::post('/peminjaman/{id}/approve', [PetugasPeminjaman::class, 'approve'])->name('peminjaman.approve');
+    Route::post('/peminjaman/{id}/reject', [PetugasPeminjaman::class, 'reject'])->name('peminjaman.reject');
+    });
+    
+//Route Peminjam
+Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
+    Route::get('/dashboard', [PeminjamDashboardController::class, 'index'])->name('dashboard');
+    
+    Route::get('/detail-alat/{id_alat}', [PeminjamAlatController::class, 'show'])->name('detail-alat');
 
+    Route::get('/proses-penyewaan/{id_alat}', [PeminjamanController::class, 'create'])->name('proses-penyewaan');
+    Route::post('/proses-penyewaan', [PeminjamanController::class, 'store'])->name('proses-penyewaan.store');
+    Route::get('/transaksi-berhasil/{id_transaksi}', fn() => view('peminjam.transaksi-berhasil'))->name('transaksi-berhasil');
+    Route::get('/transaksi', fn() => view('peminjam.riwayat-penyewaan'))->name('riwayat-penyewaan');
+
+    Route::get('/keranjang', fn() => view('peminjam.keranjang'))->name('keranjang');
+
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+    Route::get('/peminjaman/{id}/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 });

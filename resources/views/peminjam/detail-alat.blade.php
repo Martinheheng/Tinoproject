@@ -1,6 +1,11 @@
 @extends('layouts.app', ['title' => 'Detail Alat'])
 
 @section('content')
+
+    @php
+        $qty = 1;
+    @endphp
+
     <div class="max-w-7xl mx-auto">
 
         <a href="{{ route('peminjam.dashboard') }}" class="flex items-center gap-x-2 text-lg font-semibold mb-6">
@@ -12,16 +17,8 @@
             <div class="lg:col-span-4">
 
                 <div class="bg-white rounded-xl shadow p-4">
-                    <img src="https://picsum.photos/600"
+                    <img src="{{ $alat->foto_alat }}"
                         class="w-full rounded-lg object-cover">
-                </div>
-
-                {{-- Thumbnail --}}
-                <div class="flex gap-4 mt-4">
-                    @for ($i = 0; $i < 3; $i++)
-                        <img src="https://picsum.photos/200?random={{ $i }}"
-                            class="w-24 h-24 object-cover rounded-lg border cursor-pointer hover:ring-2 hover:ring-teal-500 transition">
-                    @endfor
                 </div>
 
             </div>
@@ -31,21 +28,17 @@
             <div class="lg:col-span-5 space-y-4">
 
                 <h1 class="text-3xl font-bold text-gray-800">
-                    Carbon Telescopic Rod (Panjang 2–4 m)
+                    {{ $alat->nama_alat }}
                 </h1>
 
                 <div class="text-3xl font-semibold text-gray-900">
-                    Rp.XXX.XXX,XX
+                    Rp. {{ number_format($alat->harga_sewa, 0, ',', '.') }}
                 </div>
 
                 <hr>
 
                 <p class="text-gray-600 leading-relaxed">
-                    Rod ini memiliki kualitas yang jauh lebih baik dari rod non carbon
-                    dan memiliki daya tarik dan daya tahan yang berbeda dari rod non carbon.
-                    <a href="/" class="text-teal-600 font-medium hover:underline">
-                        Lihat Selengkapnya
-                    </a>
+                    {{ $alat->deskripsi }}
                 </p>
 
                 {{-- Seller --}}
@@ -98,12 +91,12 @@
                         </div>
 
                         <span class="text-sm text-gray-500">
-                            Stok : XXX
+                            Stok : {{ $alat->stok }}
                         </span>
                     </div>
 
                     <div class="text-2xl font-bold text-gray-900">
-                        Rp.XXX.XXX,XX
+                        Rp. <span id="total_harga">{{ number_format($alat->harga_sewa, 0, ',', '.') }}</span>
                     </div>
 
                     {{-- Buttons --}}
@@ -114,10 +107,14 @@
                             Masukkan Keranjang
                         </a>
 
-                        <a href="{{ route('peminjam.proses-penyewaan', ['id_alat' => 1, 'id_variant' => 1, 'qty' => 4]) }}"
-                        class="block w-full text-center bg-teal-500 hover:bg-teal-600 text-white transition py-3 rounded-lg font-medium shadow">
-                            Sewa Sekarang
-                        </a>
+                        <form action="{{ route('peminjam.proses-penyewaan', ['id_alat' => $alat->id]) }}" method="get">
+                            <input type="number" name="qty" id="qty_hidden" value="1" hidden>
+
+                            <button type="submit"
+                            class="block w-full text-center bg-teal-500 hover:bg-teal-600 text-white transition py-3 rounded-lg font-medium shadow">
+                                Sewa Sekarang
+                            </a>
+                        </form>
 
                     </div>
 
@@ -137,15 +134,37 @@
         const minus = document.getElementById('minus');
         const plus = document.getElementById('plus');
         const qty = document.getElementById('qty');
+        const qty_hidden = document.getElementById('qty_hidden');
+        const total_harga = document.getElementById('total_harga');
+
+        const harga_sewa = {{ (int) $alat->harga_sewa }};
 
         minus.addEventListener('click', () => {
             if (qty.value > 1) {
                 qty.value--;
+                qty_hidden.value = qty.value;
             }
+            const jumlah = parseInt(qty.value) || 0;
+            const total = jumlah * harga_sewa;
+
+            total_harga.innerHTML = total.toLocaleString('id-ID');
         });
 
         plus.addEventListener('click', () => {
             qty.value++;
+
+            if (qty.value > {{ $alat->stok }}) {
+                qty.value = {{ $alat->stok }};
+            }
+            
+            qty_hidden.value = qty.value;
+            const jumlah = parseInt(qty.value) || 0;
+            const total = jumlah * harga_sewa;
+
+            total_harga.innerHTML = total.toLocaleString('id-ID');
         });
+
+        qty.addEventListener('change', () => {
+        })
     </script>
 @endsection

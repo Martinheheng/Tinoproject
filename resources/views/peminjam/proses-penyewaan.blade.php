@@ -1,41 +1,53 @@
 @extends('layouts.app', ['title' => 'Proses Penyewaan Alat'])
 @section('content')
     <div class="min-h-screen bg-gray-50 p-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
+        <form method="post" action="{{ route('peminjam.proses-penyewaan.store') }}" class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
+            @csrf
+            <input type="hidden" name="alat_id" value="{{ $alat->id }}">
+            <input type="hidden" name="jumlah_alat" value="{{ $alat->qty }}">
 
             {{-- ================= LEFT SIDE ================= --}}
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-3 space-y-6">
                 <a href="/" class="flex items-center gap-x-2 text-lg font-semibold">
                     <svg fill="#383838" class="w-5 h-5" viewBox="0 0 200 200" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" stroke="#383838"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title></title><path d="M160,89.75H56l53-53a9.67,9.67,0,0,0,0-14,9.67,9.67,0,0,0-14,0l-56,56a30.18,30.18,0,0,0-8.5,18.5c0,1-.5,1.5-.5,2.5a6.34,6.34,0,0,0,.5,3,31.47,31.47,0,0,0,8.5,18.5l56,56a9.9,9.9,0,0,0,14-14l-52.5-53.5H160a10,10,0,0,0,0-20Z"></path></g></svg>
                     Proses Penyewaan
                 </a>
-                {{-- 1. DATA PENYEWAAN --}}
-                <div class="bg-white rounded-xl border-l-6 border-blue-500 shadow p-6 space-y-4">
-                    <h2 class="font-semibold text-lg">1. Data Penyewaan</h2>
 
-                    <div>
-                        <label class="text-sm font-medium">Nama Lengkap Penyewa</label>
-                        <input type="text"
-                            class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1">
+                <div class="bg-white rounded-xl shadow p-6 h-fit space-y-6">
+
+                    <div class="flex gap-4">
+                        <img src="https://via.placeholder.com/100"
+                            class="rounded-lg w-24 h-24 object-cover">
+
+                        <div>
+                            <h3 class="font-semibold">
+                                {{ $alat->nama_alat }} x {{ $alat->qty }}
+                            </h3>
+                            <p class="text-sm text-gray-500">
+                                <span id="total_hari"></span> hari x Rp {{ number_format($alat->total_sewa, 0, ',', '.') }}
+                            </p>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="text-sm font-medium">Nomor Telepon</label>
-                        <input type="text"
-                            class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1">
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Harga Sewa</span>
+                            <input type="number" name="subtotal_harga_sewa" id="total_harga_sewa_input" hidden>
+                            <span>Rp <span id="total_harga_sewa"></span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <input type="number" name="deposit" id="deposit_input" hidden>
+                            <span>Deposit (50%)</span>
+                            <span>Rp <span id="deposit"></span></span>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between font-semibold text-red-500">
+                            <span>Total</span>
+                            <input type="number" name="total" id="total_input" hidden>
+                            <span>Rp <span id="total"></span></span>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="text-sm font-medium">Alamat Lengkap</label>
-                        <input type="text"
-                            class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1">
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-medium">Catatan</label>
-                        <textarea
-                            class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1"></textarea>
-                    </div>
                 </div>
 
 
@@ -98,17 +110,22 @@
                         <div>
                             <label class="text-sm font-medium">Tanggal Ambil</label>
                             <input type="date"
-                                class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1">
+                                name="tanggal_pinjam"
+                                id="tanggal_pinjam"
+                                class="w-full mt-1 rounded-lg border-gray-300 border px-2 py-1">
                         </div>
 
                         <div>
                             <label class="text-sm font-medium">Tanggal Kembali</label>
                             <input type="date"
-                                class="w-full mt-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 border border-gray-400 px-2 py-1">
+                                name="tanggal_kembali"
+                                id="tanggal_kembali"
+                                class="w-full mt-1 rounded-lg border-gray-300 border px-2 py-1">
                         </div>
 
                         <div class="bg-blue-50 text-blue-600 text-sm p-3 rounded-lg">
-                            Total Durasi: X Hari
+                            <input type="text" id="total_hari_input" name="total_hari" value="0" hidden></span>
+                            Total Durasi: <span id="total_hari"></span> Hari
                         </div>
                     </div>
 
@@ -135,49 +152,87 @@
                     </div>
                 </div>
 
+                <button type="submit" class="w-full px-3 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">
+                    Konfirmasi Pembayaran
+                </button>
+
             </div>
 
 
             {{-- ================= RIGHT SIDE ================= --}}
-            <div class="bg-white rounded-xl shadow p-6 h-fit sticky top-26 space-y-6">
+            
 
-                <div class="flex gap-4">
-                    <img src="https://via.placeholder.com/100"
-                        class="rounded-lg w-24 h-24 object-cover">
-
-                    <div>
-                        <h3 class="font-semibold">
-                            Carbon Telescopic Rod
-                        </h3>
-                        <p class="text-sm text-gray-500">
-                            X hari x Rp xxx.xxx
-                        </p>
-                    </div>
-                </div>
-
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span>Harga Sewa</span>
-                        <span>Rp xxx.xxx</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Deposit (50%)</span>
-                        <span>Rp xxx.xxx</span>
-                    </div>
-                    <hr>
-                    <div class="flex justify-between font-semibold text-red-500">
-                        <span>Total</span>
-                        <span>Rp xxx.xxx</span>
-                    </div>
-                </div>
-
-                <a href="{{ route('peminjam.transaksi-berhasil', ['id_transaksi' => 4]) }}" class="w-full px-3 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">
-                    Konfirmasi Pembayaran
-                </a>
-
-            </div>
-
-        </div>
+        </form>
     </div>
     
+@endsection
+
+@section('script')
+    <script>
+        const tglAmbil = document.getElementById('tanggal_pinjam');
+        const tglKembali = document.getElementById('tanggal_kembali');
+
+        const totalHargaSewa = document.getElementById('total_harga_sewa');
+
+        const deposit = document.getElementById('deposit');
+
+        const totalElements = document.getElementById('total');
+
+        const totalHariElements = document.querySelectorAll('#total_hari');
+        const totalHariInput = document.getElementById('total_hari_input');
+
+        function updateTotalHari(value) {
+            totalHariInput.value = value
+            totalHariElements.forEach(el => {
+                el.innerText = value;
+            });
+        }
+
+        function format_rupiah(value) {
+            parseInt(value)
+            return value.toLocaleString('id-ID');
+        }
+
+        // default 0
+        updateTotalHari(0)
+
+        // 1️⃣ set default tanggal ambil = hari ini
+        const today = new Date().toISOString().split('T')[0];
+        tglAmbil.value = today;
+
+        // 2️⃣ hitung selisih hari
+        function hitungHari() {
+            if (!tglAmbil.value || !tglKembali.value) {
+                updateTotalHari(0)
+                return;
+            }
+
+            const ambil = new Date(tglAmbil.value);
+            const kembali = new Date(tglKembali.value);
+
+            const selisihMs = kembali - ambil;
+            const selisihHari = selisihMs / (1000 * 60 * 60 * 24);
+
+            if (selisihHari > 0) {
+                updateTotalHari(selisihHari)
+
+                let subtotal = selisihHari * {{ (int) $alat->total_sewa }}
+
+                totalHargaSewa.innerText = format_rupiah(subtotal)
+
+                deposit.innerText = format_rupiah(subtotal * 0.5)
+
+                let total = subtotal + (subtotal * 0.5)
+                totalElements.innerText = format_rupiah(total)
+            } else {
+                updateTotalHari(0)
+                totalHargaSewa.innerText = format_rupiah(0)
+
+                deposit.innerText = format_rupiah(0)
+            }
+        }
+
+        tglKembali.addEventListener('change', hitungHari);
+        tglAmbil.addEventListener('change', hitungHari);
+    </script>
 @endsection

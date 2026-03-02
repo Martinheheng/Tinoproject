@@ -18,10 +18,16 @@ public function up()
 
         // Harus pakai foreignId dulu supaya Laravel tahu ini kolom ID untuk relasi
         $table->foreignId('user_id')->constrained('users');
-        $table->foreignId('alat_id')->constrained('alat');
+        $table->integer('subtotal');
+        $table->integer('deposit');
+        $table->integer('total');
         $table->date('tanggal_pinjam');
         $table->date('tanggal_pengembalian');
         $table->enum('status', ['menunggu', 'disetujui', 'dipinjam', 'dikembalikan', 'ditolak'])->default('menunggu');
+        $table->date('dikembalikan_pada')->nullable();
+        $table->enum('status_pengembalian', ['terlambat', 'tepat waktu'])->nullable();
+        $table->integer('total_terlambat')->nullable();
+        $table->integer('denda')->nullable();
         $table->timestamps();
     });
     }

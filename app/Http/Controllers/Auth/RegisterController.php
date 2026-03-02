@@ -17,6 +17,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             'name'=>'required|string|max:255',
+            'telepon'=>'required|unique:users,telepon',
             'email'=>'required|email|unique:users,email',
             'password'=>'required|min:6|confirmed',
             'alamat'=>'required',
@@ -24,6 +25,7 @@ class RegisterController extends Controller
 
         User::create([
             'name'=>$request->name,
+            'telepon'=>$request->telepon,
             'email'=>$request->email,
             'password'=>Hash::make($request->password),
             'role'=>'peminjam', // default role

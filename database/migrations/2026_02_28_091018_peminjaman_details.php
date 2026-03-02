@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('alat', function (Blueprint $table) {
+        Schema::create('peminjaman_details', function (Blueprint $table) {
             $table->id();
-            $table->string('foto_alat');
-            $table->string('nama_alat');
-            $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
-            $table->integer('stok');
-            $table->decimal('harga_sewa', 15, 2);
-            $table->text('deskripsi')->nullable();
+            $table->foreignId('peminjaman_id')->constrained('peminjaman', 'id_peminjaman')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('alat_id')->constrained('alat')->onDelete('cascade')->onUpdate('cascade');
+            $table->integer('jumlah');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alat');
+        //
     }
 };
