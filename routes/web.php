@@ -10,7 +10,8 @@ use App\Http\Controllers\Petugas\PeminjamanController as PetugasPeminjaman;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Peminjam\AlatController as PeminjamAlatController;
 use App\Http\Controllers\Peminjam\DashboardController as PeminjamDashboardController;
-
+use App\Http\Controllers\Peminjam\KeranjangController;
+use App\Http\Controllers\TransaksiController;
 
 Route::get('/', function () {
 
@@ -56,10 +57,16 @@ Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam
 
     Route::get('/proses-penyewaan/{id_alat}', [PeminjamanController::class, 'create'])->name('proses-penyewaan');
     Route::post('/proses-penyewaan', [PeminjamanController::class, 'store'])->name('proses-penyewaan.store');
-    Route::get('/transaksi-berhasil/{id_transaksi}', fn() => view('peminjam.transaksi-berhasil'))->name('transaksi-berhasil');
-    Route::get('/transaksi', fn() => view('peminjam.riwayat-penyewaan'))->name('riwayat-penyewaan');
+    Route::get('/transaksi-berhasil/{id_transaksi}', [PeminjamanController::class, 'show'])->name('transaksi-berhasil');
+    Route::get('/transaksi', [PeminjamanController::class, 'index'])->name('riwayat-penyewaan');
 
-    Route::get('/keranjang', fn() => view('peminjam.keranjang'))->name('keranjang');
+    Route::prefix('keranjang')->name('keranjang.')->group(function () {
+        Route::get('/', [KeranjangController::class, 'index'])->name('index');
+        Route::post('/add', [KeranjangController::class, 'add'])->name('add');
+        Route::put('/update/{id}', [KeranjangController::class, 'update'])->name('update');
+        Route::get('/remove/{id}', [KeranjangController::class, 'remove'])->name('remove');
+        Route::post('/checkout', [KeranjangController::class, 'checkout'])->name('checkout');
+    });
 
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
     Route::get('/peminjaman/{id}/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');

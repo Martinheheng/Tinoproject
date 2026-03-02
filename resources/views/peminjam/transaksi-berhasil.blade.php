@@ -33,40 +33,43 @@
                 <div class="flex justify-between border-b pb-2">
                     <span>Produk :</span>
                     <span class="font-semibold text-right">
-                        Carbon Telescopic Rod (Panjang 2-4 m)
+                        {{ $peminjaman->peminjaman_details?->first()->alat->nama_alat }}
+                        @if ($peminjaman?->peminjaman_details?->count() - 1 > 0)
+                            <span class="bg-gray-200 rounded-xl px-1">+{{ $peminjaman?->peminjaman_details?->count() }}</span>
+                        @endif
                     </span>
                 </div>
 
                 <div class="flex justify-between border-b pb-2">
                     <span>Nama Penyewa :</span>
-                    <span class="font-semibold">Tino</span>
+                    <span class="font-semibold">{{ Auth::user()->name }}</span>
                 </div>
 
                 <div class="flex justify-between border-b pb-2">
                     <span>Telepon :</span>
-                    <span class="font-semibold">085123456789</span>
+                    <span class="font-semibold">{{ Auth::user()->telepon }}</span>
                 </div>
 
                 <div class="flex justify-between border-b pb-2">
                     <span>Alamat :</span>
                     <span class="font-semibold text-right">
-                        Pajaran-Gunting-kec.Sukorejo
+                        {{ Auth::user()->alamat }}
                     </span>
                 </div>
 
                 <div class="flex justify-between border-b pb-2">
                     <span>Tanggal Ambil :</span>
-                    <span class="font-semibold">12/12/2025</span>
+                    <span class="font-semibold">{{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->format('d-m-Y') }}</span>
                 </div>
 
                 <div class="flex justify-between border-b pb-2">
                     <span>Tanggal Kembali :</span>
-                    <span class="font-semibold">03/01/2026</span>
+                    <span class="font-semibold">{{ \Carbon\Carbon::parse($peminjaman->tanggal_pengembalian)->format('d-m-Y') }}</span>
                 </div>
 
                 <div class="flex justify-between">
                     <span>Durasi :</span>
-                    <span class="font-semibold">4 Hari</span>
+                    <span class="font-semibold">{{ $peminjaman->jumlah_hari }} Hari</span>
                 </div>
 
             </div>
@@ -83,7 +86,7 @@
                 {{-- METODE --}}
                 <div>
                     <span class="inline-block bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full mb-3">
-                        Transfer Bank (BCA)
+                        {{ $peminjaman->metode_pembayaran == 'bca' ? 'Transfer Bank (BCA)' : ($peminjaman->metode_pembayaran == 'card' ? 'Kartu Kredit' : 'Cash' )}}
                     </span>
 
                     <div class="bg-blue-100 rounded-xl p-4 text-sm space-y-1">
@@ -97,19 +100,19 @@
                 <div class="bg-blue-100 rounded-xl p-4 text-sm space-y-3">
                     <div class="flex justify-between">
                         <span>Harga Sewa Satuan :</span>
-                        <span>Rp.100.000</span>
+                        <span>Rp. {{ number_format($peminjaman->peminjaman_details?->first()->alat->harga_sewa, 0, ',', '.') }}</span>
                     </div>
 
                     <div class="flex justify-between">
                         <span>Durasi :</span>
-                        <span>4 Hari</span>
+                        <span>{{ $peminjaman->jumlah_hari }} Hari</span>
                     </div>
 
                     <hr class="my-3">
 
                     <div class="flex justify-between font-semibold text-base">
                         <span>Total Pembayaran</span>
-                        <span>Rp.400.000</span>
+                        <span>Rp. {{ number_format($peminjaman->total, 0, ',', '.') }}</span>
                     </div>
                 </div>
 

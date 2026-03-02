@@ -1,74 +1,71 @@
 @extends('layouts.app', ['title' => 'Keranjang'])
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto p-6 space-y-6">
 
-    <h1 class="text-2xl font-semibold mb-6">
-        Keranjang
-    </h1>
+        <h1 class="text-2xl font-semibold">Keranjang</h1>
 
-    <form action="#" method="POST">
-        @csrf
+        <form method="POST" action="{{ route('peminjam.keranjang.checkout') }}">
+            @csrf
 
-        <div class="overflow-x-auto border rounded-lg">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-3"></th>
-                        <th class="text-left px-4 py-3">Produk</th>
-                        <th class="text-left px-4 py-3">Harga</th>
-                        <th class="text-left px-4 py-3">Durasi</th>
-                        <th class="text-left px-4 py-3">Subtotal</th>
-                    </tr>
-                </thead>
+            <div class="space-y-4">
 
-                <tbody class="divide-y">
-                    {{-- @forelse($cartItems as $item) --}}
-                        <tr>
-                            <td class="px-4 py-3">
-                                <input type="checkbox"
-                                       name="selected_items[]"
-                                       value="id"
-                                       class="w-4 h-4">
-                            </td>
+                @foreach ($keranjang->keranjang_items as $item)
+                    <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">
 
-                            <td class="px-4 py-3">
-                                Produk
-                            </td>
+                        <div>
+                            <h2 class="font-semibold">{{ $item->alat->nama_alat }}</h2>
+                            <p class="text-sm text-gray-500">
+                                Rp {{ number_format($item->alat->harga_sewa, 0, ',', '.') }} / hari
+                            </p>
+                        </div>
 
-                            <td class="px-4 py-3">
-                                Rp 100.000
-                            </td>
+                        <div class="flex items-center gap-3">
 
-                            <td class="px-4 py-3">
-                                12 Hari
-                            </td>
+                            <input type="number" name="jumlah" value="{{ $item->jumlah }}" min="1"
+                                class="w-20 border rounded px-2 py-1">
 
-                            <td class="px-4 py-3">
-                                Rp 1.200.000
-                            </td>
-                        </tr>
-                    {{-- @empty --}}
-                        <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-gray-500">
-                                Keranjang kosong.
-                            </td>
-                        </tr>
-                    {{-- @endforelse --}}
-                </tbody>
-            </table>
-        </div>
+                            <a href="{{ route('peminjam.keranjang.remove', $item->id) }}" class="text-red-500 text-sm">
+                                Hapus
+                            </a>
+                        </div>
 
-        {{-- @if($cartItems->count()) --}}
-            <div class="mt-6 text-right">
-                <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    Checkout
-                </button>
+                    </div>
+                @endforeach
+
             </div>
-        {{-- @endif --}}
 
-    </form>
+            <div class="grid md:grid-cols-2 gap-4 mt-6">
 
-</div>
+                <div>
+                    <label>Tanggal Pinjam</label>
+                    <input type="date" name="tanggal_pinjam" class="w-full border rounded px-2 py-1">
+                </div>
+
+                <div>
+                    <label>Tanggal Kembali</label>
+                    <input type="date" name="tanggal_kembali" class="w-full border rounded px-2 py-1">
+                </div>
+
+            </div>
+
+            <div class="mt-4 space-y-2">
+                <label class="block">
+                    <input type="radio" name="metode_pembayaran" value="bca"> Transfer BCA
+                </label>
+                <label class="block">
+                    <input type="radio" name="metode_pembayaran" value="card"> Kartu Kredit
+                </label>
+                <label class="block">
+                    <input type="radio" name="metode_pembayaran" value="cod"> COD
+                </label>
+            </div>
+
+            <button type="submit" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-xl">
+                Checkout
+            </button>
+
+        </form>
+
+    </div>
 @endsection

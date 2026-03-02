@@ -21,6 +21,7 @@ public function up()
         $table->integer('subtotal');
         $table->integer('deposit');
         $table->integer('total');
+        $table->string('metode_pembayaran');
         $table->date('tanggal_pinjam');
         $table->date('tanggal_pengembalian');
         $table->enum('status', ['menunggu', 'disetujui', 'dipinjam', 'dikembalikan', 'ditolak'])->default('menunggu');

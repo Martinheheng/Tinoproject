@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PeminjamanDetails extends Model
+class keranjang_items extends Model
 {
     use HasFactory;
 
-    protected $table = 'peminjaman_details';
-    protected $guarded = [];
+    protected $table = 'keranjang_items', $guarded = [];
 
-    public function peminjaman()
+    public function keranjang()
     {
-        return $this->belongsTo(Peminjaman::class, 'peminjaman_id', 'id');
+        return $this->belongsTo(keranjang::class, 'keranjang_id', 'id');
     }
 
     public function alat()
     {
         return $this->belongsTo(alat::class, 'alat_id', 'id');
     }
+
 }
