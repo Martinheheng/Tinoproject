@@ -32,7 +32,7 @@ class AlatController extends Controller
 
         Alat::create($request->all());
 
-        return redirect()->route('alat.index')
+        return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Ditambahkan');
     }
 
@@ -57,7 +57,7 @@ class AlatController extends Controller
 
         $alat->update($request->all());
 
-        return redirect()->route('alat.index')
+        return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Diupdate');
     }
 
@@ -66,7 +66,7 @@ class AlatController extends Controller
         $alat = Alat::findOrFail($id);
         $alat->delete();
 
-        return redirect()->route('alat.index')
+        return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Dihapus');
     }
 }

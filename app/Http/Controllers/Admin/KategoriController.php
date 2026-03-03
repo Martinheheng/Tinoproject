@@ -27,7 +27,7 @@ class KategoriController extends Controller
 
         Kategori::create($request->all());
 
-        return redirect()->route('kategori.index')
+        return redirect()->route('admin.kategori.index')
             ->with('success', 'Kategori berhasil ditambahkan');
     }
 
@@ -42,7 +42,7 @@ class KategoriController extends Controller
         $kategori = Kategori::findOrFail($id);
         $kategori->update($request->all());
 
-        return redirect()->route('kategori.index')
+        return redirect()->route('admin.kategori.index')
             ->with('success', 'Kategori berhasil diupdate');
     }
 

@@ -16,7 +16,7 @@ if (!function_exists('hitung_denda')) {
             // 50% dari harga sewa per hari
             $tarif_per_hari = $harga_alat * 0.5;
 
-            return $selisih_hari * $tarif_per_hari;
+            return round($selisih_hari * $tarif_per_hari);
         }
 
         return 0;

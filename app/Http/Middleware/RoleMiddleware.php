@@ -14,13 +14,12 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-public function handle($request, \Closure $next, $roles)
+public function handle($request, Closure $next, $roles)
 {
     if (!auth()->check()) {
-        abort(403);
+        return redirect('/login');
     }
 
-    // Ubah string jadi array
     $roles = explode(',', $roles);
 
     if (!in_array(auth()->user()->role, $roles)) {

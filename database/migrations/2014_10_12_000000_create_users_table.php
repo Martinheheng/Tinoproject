@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'petugas', 'peminjam']);
+            $table->string('role');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('no_hp', 15)->nullable()->unique();
             $table->string('alamat');

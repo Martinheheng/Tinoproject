@@ -12,7 +12,7 @@
         </ul>
     </div>
 @endif
-<form method="POST" action="{{ route('alat.store') }}">
+<form method="POST" action="{{ route('admin.alat.store') }}">
     @csrf
 
     <input type="text" name="nama_alat" placeholder="Nama Alat"><br><br>

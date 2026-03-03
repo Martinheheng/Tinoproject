@@ -10,4 +10,14 @@ class Peminjaman extends Model
     use HasFactory;
 
     protected $table = 'peminjaman';
+    protected $fillable = [
+        'status',
+        'tanggal_kembali_real',
+        'tanggal_denda',
+    ];
+
+    public function alat()
+    {
+        return $this->belongsTo(Alat::class);
+    }
 }

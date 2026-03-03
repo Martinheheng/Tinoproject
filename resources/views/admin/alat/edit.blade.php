@@ -4,7 +4,7 @@
 
 <h2>Edit Alat</h2>
 
-<form method="POST" action="{{ route('alat.update', $alat->id) }}">
+<form method="POST" action="{{ route('admin.alat.update', $alat->id) }}">
     @csrf
     @method('PUT')
 
