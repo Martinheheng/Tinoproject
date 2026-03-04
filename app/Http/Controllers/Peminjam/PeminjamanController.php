@@ -34,43 +34,50 @@ class PeminjamanController extends Controller
             'alat_id' => 'required|exists:alat,id',
             'jumlah_alat' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date',
+            'tanggal_kembali' => 'required|date|after:tanggal_pinjam',
             'payment_method' => 'required|in:card,transfer,cod',
         ]);
 
-        DB::beginTransaction();
-        try {
-            $alat = Alat::findOrFail($request->alat_id);
-            $subtotal = $request->jumlah_alat * Alat::find($request->alat_id)->harga_sewa;
-            
+        return DB::transaction(function () use ($request) {
+
+            $alat = Alat::lockForUpdate()->findOrFail($request->alat_id);
+
+            if ($alat->stok < $request->jumlah_alat) {
+                throw new \Exception("Stok {$alat->nama_alat} tidak mencukupi.");
+            }
+
+            $durasi = Carbon::parse($request->tanggal_pinjam)
+                ->diffInDays(Carbon::parse($request->tanggal_kembali));
+
+            if ($durasi <= 0) {
+                throw new \Exception("Durasi tidak valid.");
+            }
+
+            $subtotal = $alat->harga_sewa * $request->jumlah_alat * $durasi;
+            $deposit = $subtotal * 0.5;
+            $total = $subtotal - $deposit;
+
             $peminjaman = Peminjaman::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->id(),
                 'subtotal' => $subtotal,
-                'deposit' => $subtotal * 0.5,
-                'total' => $subtotal + ($subtotal * 0.5),
+                'deposit' => $deposit,
+                'total' => $total,
                 'metode_pembayaran' => $request->payment_method,
                 'tanggal_pinjam' => $request->tanggal_pinjam,
                 'tanggal_pengembalian' => $request->tanggal_kembali,
-                'status' => 'menunggu',
+                'status' => 'menunggu'
             ]);
-            
-            $peminjaman_detail = PeminjamanDetails::create([
+
+            PeminjamanDetails::create([
                 'peminjaman_id' => $peminjaman->id,
-                'alat_id' => $request->alat_id,
-                "jumlah" => $request->jumlah_alat
+                'alat_id' => $alat->id,
+                'jumlah' => $request->jumlah_alat
             ]);
 
-            $peminjaman_detail->alat()->decrement('stok', $request->jumlah_alat);
+            $alat->decrement('stok', $request->jumlah_alat);
 
-            DB::commit();
-            return redirect()->route('peminjam.transaksi-berhasil', ['id_transaksi' => $peminjaman->id])
-                ->with('success', 'Pengajuan peminjaman berhasil dibuat');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error($e);
-            return redirect()->back()
-                ->with('error', 'Pengajuan peminjaman gagal dibuat: ' . $e->getMessage());
-        }
+            return redirect()->route('peminjam.transaksi-berhasil', $peminjaman->id);
+        });
     }
 
     public function show($id)

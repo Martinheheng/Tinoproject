@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Peminjam;
 
 use App\Http\Controllers\Controller;
+use App\Models\alat;
 use App\Models\keranjang;
 use App\Models\keranjang_items;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanDetails;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -76,28 +78,40 @@ class KeranjangController extends Controller
         $request->validate([
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after:tanggal_pinjam',
-            'metode_pembayaran' => 'required'
+            'metode_pembayaran' => 'required|in:card,transfer,cod',
         ]);
 
         $keranjang = $this->getCart()->load('keranjang_items.alat');
 
-        if ($keranjang->keranjang_items->count() == 0) {
-            return back()->with('error', 'Keranjang kosong');
+        if ($keranjang->keranjang_items->isEmpty()) {
+            return back()->with('error', 'Keranjang kosong.');
         }
 
-        $durasi = \Carbon\Carbon::parse($request->tanggal_pinjam)
-            ->diffInDays(\Carbon\Carbon::parse($request->tanggal_kembali));
+        $durasi = Carbon::parse($request->tanggal_pinjam)
+            ->diffInDays(Carbon::parse($request->tanggal_kembali));
 
-        DB::transaction(function () use ($keranjang, $durasi, $request) {
+        if ($durasi <= 0) {
+            return back()->with('error', 'Durasi tidak valid.');
+        }
+
+        $peminjaman = DB::transaction(function () use ($keranjang, $durasi, $request) {
 
             $subtotal = 0;
 
+            // 🔥 Lock semua alat dulu
             foreach ($keranjang->keranjang_items as $item) {
-                $subtotal += $item->alat->total_sewa * $durasi * $item->jumlah;
+
+                $alat = alat::lockForUpdate()->find($item->alat_id);
+
+                if ($alat->stok < $item->jumlah) {
+                    throw new \Exception("Stok {$alat->nama_alat} tidak mencukupi.");
+                }
+
+                $subtotal += $alat->harga_sewa * $item->jumlah * $durasi;
             }
 
             $deposit = $subtotal * 0.5;
-            $total = $subtotal + $deposit;
+            $total = $subtotal - $deposit;
 
             $peminjaman = Peminjaman::create([
                 'user_id' => auth()->id(),
@@ -111,17 +125,23 @@ class KeranjangController extends Controller
             ]);
 
             foreach ($keranjang->keranjang_items as $item) {
+
                 PeminjamanDetails::create([
                     'peminjaman_id' => $peminjaman->id,
                     'alat_id' => $item->alat_id,
                     'jumlah' => $item->jumlah
                 ]);
+
+                $item->alat->decrement('stok', $item->jumlah);
             }
 
             $keranjang->keranjang_items()->delete();
-            
-            return redirect()->route('peminjaman.transaksi-berhasil', ['id_transaksi' => $peminjaman->id])->with('success', 'Checkout berhasil');
+
+            return $peminjaman;
         });
 
+        return redirect()
+            ->route('peminjam.transaksi-berhasil', $peminjaman->id)
+            ->with('success', 'Checkout berhasil.');
     }
 }
