@@ -68,13 +68,13 @@
                         </td>
 
                         <td class="px-4 py-3">
-                            @if($trx->status == 'selesai')
+                            @if($trx->status == 'dikembalikan')
                                 <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">
-                                    Selesai
+                                    Dikembalikan
                                 </span>
-                            @elseif($trx->status == 'proses')
+                            @elseif($trx->status == 'menunggu')
                                 <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600">
-                                    Proses
+                                    Menunggu
                                 </span>
                             @else
                                 <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-600">
