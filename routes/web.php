@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Peminjam\AlatController as PeminjamAlatController;
 use App\Http\Controllers\Peminjam\DashboardController as PeminjamDashboardController;
 use App\Http\Controllers\Peminjam\KeranjangController;
+use App\Http\Controllers\Peminjam\ProfileController;
 use App\Http\Controllers\TransaksiController;
 
 Route::get('/', function () {
@@ -59,6 +60,9 @@ Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam
     Route::post('/proses-penyewaan', [PeminjamanController::class, 'store'])->name('proses-penyewaan.store');
     Route::get('/transaksi-berhasil/{id_transaksi}', [PeminjamanController::class, 'show'])->name('transaksi-berhasil');
     Route::get('/transaksi', [PeminjamanController::class, 'index'])->name('riwayat-penyewaan');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::prefix('keranjang')->name('keranjang.')->group(function () {
         Route::get('/', [KeranjangController::class, 'index'])->name('index');
