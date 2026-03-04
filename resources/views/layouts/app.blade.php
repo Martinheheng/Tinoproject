@@ -15,35 +15,85 @@
     <div class="fixed top-0 left-64 w-[calc(100%-16rem)] z-30 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class=" mx-auto px-6 py-3 flex items-center justify-between">
             {{-- Search Bar --}}
-            <div class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="w-full flex items-center bg-gray-100 rounded-full px-4 focus-within:ring-2 focus-within:ring-indigo-500 transition">
-                    <input type="text" name="search" class="w-full bg-transparent px-3 py-2 focus:outline-none text-gray-800 text-sm" placeholder="Cari peralatan...">
+            <form action="{{ route('peminjam.dashboard') }}" method="GET">
+                <div class="hidden md:flex flex-1 max-w-xl mx-8">
+                    <div class="w-full flex items-center bg-gray-100 rounded-full px-4 focus-within:ring-2 focus-within:ring-indigo-500 transition">
+                        <input type="text" name="search" class="w-full bg-transparent px-3 py-2 focus:outline-none text-gray-800 text-sm" placeholder="Cari peralatan...">
 
-                    <button class="text-gray-500 hover:text-gray-800 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </button>
+                        <button class="text-gray-500 hover:text-gray-800 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
 
+                    </div>
                 </div>
-            </div>
+            </form>
 
 
             {{-- RIGHT --}}
             <div class="flex items-center gap-4">
 
                 {{-- Filter --}}
-                <button
-                    class="hidden sm:flex items-center gap-2  px-4 py-2 rounded-full  border border-gray-200  text-gray-600 text-sm font-medium hover:bg-gray-100  transition">
+                <form method="GET" action="{{ route('peminjam.dashboard') }}" class="relative hidden sm:block">
 
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.78584 3C4.24726 3 3 4.24726 3 5.78584C3 6.59295 3.28872 7.37343 3.81398 7.98623L6.64813 11.2927C7.73559 12.5614 8.33333 14.1773 8.33333 15.8483V18C8.33333 19.6569 9.67648 21 11.3333 21H12.6667C14.3235 21 15.6667 19.6569 15.6667 18V15.8483C15.6667 14.1773 16.2644 12.5614 17.3519 11.2927L20.186 7.98624C20.7113 7.37343 21 6.59294 21 5.78584C21 4.24726 19.7527 3 18.2142 3H5.78584Z" fill="currentColor" />
-                    </svg>
+                    <button type="button"
+                        onclick="document.getElementById('filterBox').classList.toggle('hidden')"
+                        class="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-100 transition">
+                        Filter
+                    </button>
 
-                    Filter
-                </button>
+                    <div id="filterBox"
+                        class="hidden absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-xl p-4 space-y-4 z-50">
+
+                        {{-- Status --}}
+                        <div>
+                            <label class="text-xs text-gray-500">Status</label>
+                            <select name="status" class="w-full mt-1 border rounded-lg px-2 py-1 text-sm">
+                                <option value="">Semua</option>
+                                <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Tersedia</option>
+                                <option value="empty" {{ request('status') == 'empty' ? 'selected' : '' }}>Habis</option>
+                            </select>
+                        </div>
+
+                        {{-- Harga --}}
+                        <div>
+                            <label class="text-xs text-gray-500">Harga Minimum</label>
+                            <input type="number" name="min_price" value="{{ request('min_price') }}"
+                                class="w-full mt-1 border rounded-lg px-2 py-1 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-500">Harga Maximum</label>
+                            <input type="number" name="max_price" value="{{ request('max_price') }}"
+                                class="w-full mt-1 border rounded-lg px-2 py-1 text-sm">
+                        </div>
+
+                        {{-- Sorting --}}
+                        <div>
+                            <label class="text-xs text-gray-500">Urutkan</label>
+                            <select name="sort" class="w-full mt-1 border rounded-lg px-2 py-1 text-sm">
+                                <option value="">Default</option>
+                                <option value="termurah" {{ request('sort') == 'termurah' ? 'selected' : '' }}>Harga Termurah</option>
+                                <option value="termahal" {{ request('sort') == 'termahal' ? 'selected' : '' }}>Harga Termahal</option>
+                                <option value="stok" {{ request('sort') == 'stok' ? 'selected' : '' }}>Stok Terbanyak</option>
+                            </select>
+                        </div>
+
+                        <div class="flex justify-between pt-2">
+                            <a href="{{ route('peminjam.dashboard') }}" class="text-sm text-gray-500">
+                                Reset
+                            </a>
+                            <button type="submit"
+                                class="bg-indigo-600 text-white text-sm px-3 py-1 rounded-lg">
+                                Terapkan
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
 
 
                 {{-- Cart --}}
