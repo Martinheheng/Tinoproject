@@ -6,14 +6,31 @@ use App\Http\Controllers\Controller;
 use App\Models\Alat;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use App\Models\kategori;
 
 class PeminjamanController extends Controller
 {
-    public function index()
-    {
-        $alats = Alat::where('stok', '>', 0)->get();
-        return view('peminjam.peminjaman.index', compact('alats'));
+
+public function index(Request $request)
+{
+    $query = Alat::with(['kategori', 'peminjamans' => function($q) {
+        $q->where('user_id', auth()->id())
+          ->whereIn('status', ['menunggu','dipinjam']);
+    }]);
+
+    if ($request->search) {
+        $query->where('nama', 'like', '%' . $request->search . '%');
     }
+
+    if ($request->kategori) {
+        $query->where('kategori_id', $request->kategori);
+    }
+
+    $alats = $query->latest()->paginate(8)->withQueryString();
+    $kategoris = Kategori::all();
+
+    return view('peminjam.peminjaman.index', compact('alats', 'kategoris'));
+}
 
     public function create($id)
     {
@@ -42,4 +59,12 @@ class PeminjamanController extends Controller
         return redirect()->route('peminjam.peminjaman.index')
             ->with('success', 'Pengajuan peminjaman berhasil dibuat');
     }
+    public function show($id)
+{
+    $peminjaman = Peminjaman::with('alat.kategori')
+        ->where('user_id', auth()->id())
+        ->findOrFail($id);
+
+    return view('peminjam.show', compact('peminjaman'));
+}
 }

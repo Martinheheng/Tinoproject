@@ -1,23 +1,29 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Peminjaman extends Model
 {
-    use HasFactory;
-
     protected $table = 'peminjaman';
+
     protected $fillable = [
-        'status',
+        'user_id',
+        'alat_id',
+        'jumlah',
+        'tanggal_pinjam',
+        'tanggal_kembali_rencana',
         'tanggal_kembali_real',
-        'tanggal_denda',
+        'status'
     ];
 
     public function alat()
     {
         return $this->belongsTo(Alat::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

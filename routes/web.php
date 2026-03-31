@@ -24,12 +24,6 @@ use App\Http\Controllers\Admin\LogController;
 |
 */
 
-//route dashboard admin
-Route::get('/admin/dashboard', 
-    [DashboardController::class, 'index'])
-    ->middleware(['auth','role:admin'])
-    ->name('admin.dashboard');
-
 // autentikas web login
 // ================= AUTH =================
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
@@ -59,6 +53,10 @@ Route::middleware(['auth', 'role:admin'])
         ->name('pengembalian.kembalikan');
         Route::get('log', [logController::class, 'index'])
         ->name('log.index');
+        Route::post('/alat/bulk-delete', [AlatController::class, 'bulkDelete'])
+        ->name('alats.bulkDelete');
+        Route::get('/peminjam/peminjaman/{id}', [PeminjamanController::class, 'show'])
+        ->name('peminjam.peminjaman.show');
 
 });
 

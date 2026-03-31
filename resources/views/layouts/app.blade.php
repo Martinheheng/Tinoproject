@@ -36,6 +36,27 @@
     <div class="p-6">
         @yield('content')
     </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+@endif
 
+@if($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Terjadi Kesalahan!',
+        html: `{!! implode('<br>', $errors->all()) !!}`,
+        confirmButtonColor: '#dc2626'
+    });
+</script>
+@endif
 </body>
 </html>

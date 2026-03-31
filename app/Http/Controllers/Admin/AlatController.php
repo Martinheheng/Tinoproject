@@ -9,13 +9,34 @@ use Illuminate\Http\Request;
 
 class AlatController extends Controller
 {
-    public function index()
-    {
-        $alats = Alat::with('kategori')->get();
-        return view('admin.alat.index', compact('alats'));
+public function index(Request $request)
+{
+    $query = Alat::query();
+
+    if ($request->search) {
+        $query->where('nama_alat', 'like', '%'.$request->search.'%');
     }
 
-    public function create()
+    if ($request->kategori) {
+        $query->where('kategori_id', $request->kategori);
+    }
+
+    $alats = $query->paginate(10)->withQueryString();
+
+    $totalAlat = Alat::count();
+    $totalStok = Alat::sum('stok');
+    $alatHabis = Alat::where('stok', 0)->count();
+    $kategoris = Kategori::all();
+
+    return view('admin.alat.index', compact(
+        'alats',
+        'totalAlat',
+        'totalStok',
+        'alatHabis',
+        'kategoris'
+    ));
+}
+ public function create()
     {
         $kategoris = Kategori::all();
         return view('admin.alat.create', compact('kategoris'));
@@ -29,8 +50,13 @@ class AlatController extends Controller
             'harga_sewa' => 'required|numeric',
             'kategori_id' => 'required'
         ]);
+            $data = $request->all();
 
-        Alat::create($request->all());
+            if($request->hasFile('gambar')){
+                $data['gambar'] = $request->file('gambar')->store('alat','public');
+            }
+
+            Alat::create($data);
 
         return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Ditambahkan');
@@ -68,5 +94,17 @@ class AlatController extends Controller
 
         return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Dihapus');
+    }
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) == 0) {
+            return back()->with('error', 'Tidak ada data dipilih');
+        }
+
+        Alat::whereIn('id', $ids)->delete();
+
+        return back()->with('success', 'Data berhasil dihapus');
     }
 }

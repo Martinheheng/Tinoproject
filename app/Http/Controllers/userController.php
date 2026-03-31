@@ -37,7 +37,13 @@ public function store(Request $request)
         'role'     => $request->role,
     ]);
 
-    return redirect()->route('admin.user.index')
-        ->with('success', 'User berhasil ditambahkan');
+    return redirect()->route('admin.dashboard')
+    ->with('success', 'User berhasil ditambahkan');
+}
+public function destroy(User $user)
+{
+    $user->delete();
+
+    return redirect()->route('admin.dashboard')->with('succses', 'User berhasil dihapus');
 }
 }

@@ -1,47 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
+@section('title', 'Dashboard Admin')
 @section('content')
-<div class="min-h-screen bg-gray-100 flex">
-
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-900 text-white p-6 space-y-6">
-        <h2 class="text-2xl font-bold text-emerald-400">Fish Gear</h2>
-
-        <nav class="space-y-2 text-sm">
-
-            <a href="#" class="block px-4 py-2 rounded hover:bg-slate-700">Dashboard</a>
-
-            <p class="text-gray-400 text-xs mt-4">MASTER DATA</p>
-            <a href="{{ route('admin.user.index') }}" class="block px-4 py-2 rounded hover:bg-slate-700">User</a>
-            <a href="{{ route('admin.kategori.index') }}" class="block px-4 py-2 rounded hover:bg-slate-700">Kategori</a>
-            <a href="{{ route('admin.alat.index') }}" class="block px-4 py-2 rounded {{ request()->routeIs('admin.alat.*') ? 'bg-slate-700' : 'hover:bg-slate-700' }}">Alat</a>
-
-            <p class="text-gray-400 text-xs mt-4">TRANSAKSI</p>
-            <a href="{{ route('admin.peminjaman.index') }}" class="block px-4 py-2 rounded hover:bg-slate-700">Peminjaman</a>
-            <a href="{{ route('admin.pengembalian.index') }}" class="block px-4 py-2 rounded hover:bg-slate-700">Pengembalian</a>
-
-            <p class="text-gray-400 text-xs mt-4">SYSTEM</p>
-            <a href="{{ route('admin.log.index') }}" class="block px-4 py-2 rounded hover:bg-slate-700">Log Aktivitas</a>
-
-        </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 p-8">
-
-        <!-- HEADER -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Dashboard Admin</h1>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-                    Logout
-                </button>
-            </form>
-        </div>
-
         <!-- STATISTIK -->
+
         <div class="grid grid-cols-4 gap-6 mb-10">
 
             <div class="bg-white p-6 rounded-xl shadow">

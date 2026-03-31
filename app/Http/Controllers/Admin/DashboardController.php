@@ -7,7 +7,7 @@ use App\Models\Alat;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\User;
-use App\Models\Log_aktifitas;
+use App\Models\Log;
 
 class DashboardController extends Controller
 {
@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
         // DATA TABEL
         $users = User::latest()->take(5)->get();
-        $logs = Log_aktifitas::latest()->take(5)->get();
+        $logs = Log::latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'totalUser',
