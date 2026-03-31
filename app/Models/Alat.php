@@ -19,4 +19,8 @@ class alat extends Model
     public function kategori() {
         return $this->belongsTo(Kategori::class);
     }
+
+    public function peminjaman_details() {
+        return $this->hasMany(PeminjamanDetails::class, 'alat_id', 'id');
+    }
 }

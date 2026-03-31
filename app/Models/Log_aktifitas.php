@@ -7,9 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log_aktifitas extends Model
 {
-   protected $fillable = [
-    'user_id',
-    'role',
-    
-   ];
+   protected $guarded = [];
 }

@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('alat', function (Blueprint $table) {
+        Schema::create('keranjang_items', function (Blueprint $table) {
             $table->id();
-            $table->string('foto_alat');
-            $table->string('nama_alat');
-            $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
-            $table->integer('stok');
-            $table->decimal('harga_sewa', 15, 2);
-            $table->text('deskripsi')->nullable();
+            $table->foreignId('keranjang_id')->constrained('keranjang')->cascadeOnDelete();
+            $table->foreignId('alat_id')->constrained()->cascadeOnDelete();
+            $table->integer('jumlah');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alat');
+        Schema::dropIfExists('keranjang_items');
     }
 };
