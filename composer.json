@@ -27,8 +27,10 @@
             "Database\\Seeders\\": "database/seeders/"
         },
             "files": [
-        "app/Helpers/FishGearHelper.php"
+        "app/Helpers/FishGearHelper.php",
+        "app/Helpers/logHelper.php"
     ]
+    
     },
 
     "autoload-dev": {

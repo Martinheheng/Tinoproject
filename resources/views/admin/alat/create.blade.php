@@ -1,36 +1,49 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
+@section('title', 'Tambahn Alat')
 @section('content')
 
-<h2>Tambah Alat</h2>
-@if ($errors->any())
-    <div style="color:red">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-<form method="POST" action="{{ route('alat.store') }}">
+<h1 class="text-xl font-bold mb-4">Tambah Alat</h1>
+<form action="{{route ('admin.alat.store')}}" method="POST" 
+enctype="multipart/form-data">
     @csrf
 
-    <input type="text" name="nama_alat" placeholder="Nama Alat"><br><br>
-            <label>Kategori</label>
-        <select name="kategori_id">
-            <option value="">-- Pilih Kategori --</option>
-            @foreach($kategoris as $kategori)
-                <option value="{{ $kategori->id }}">
-                    {{ $kategori->nama_kategori }}
-                </option>
+    <div class="mb-3">
+        <label>Nama</label>
+        <input type="text" name="nama_alat" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="mb-3">
+        <label>Kategori</label>
+        <select name="kategori_id" class="w-full border p-2 rounded">
+            <option value="--Pilih Kategori--"></option>
+            @foreach($kategoris as $k)
+            <option value="{{$k->id}}">
+                {{ $k->nama_kategori }}
+            </option>
             @endforeach
         </select>
-        <br><br>
-    <input type="number" name="stok" placeholder="Stok"><br><br>
-    <input type="number" step="0.01" name="harga_sewa" placeholder="Harga Sewa"><br><br>
-    <textarea name="deskripsi" placeholder="Deskripsi"></textarea><br><br>
 
-    <button type="submit">Simpan</button>
+    </div>
+
+    <div class="mb-3">
+        <label>Stok</label>
+        <input type="number" name="stok" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="mb-3">
+        <label>Harga</label>
+        <input type="number" name="harga_sewa" class="w-full border p-2 rounded" min="10000" step="5000">
+    </div>
+    <div class="mb-3">
+        <label>deskripsi</label>
+        <input type="text" name="deskripsi" class="w-full border p-2 rounded" min="10000" step="5000">
+    </div>
+    <div class="mb-3">
+        <label>Foto Alat</label>
+        <input type="file" name="foto_alat" class="w-full border p-2 rounded">
+    </div>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded">
+        Simpan
+    </button>
 </form>
-
 @endsection
