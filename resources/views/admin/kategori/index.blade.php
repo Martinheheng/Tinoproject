@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
 <h2>Data Kategori</h2>
 
-<a href="{{ route('kategori.create') }}">+ Tambah</a>
+<a href="{{ route('admin.kategori.create') }}">+ Tambah</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -20,9 +20,9 @@
     <tr>
         <td>{{ $kategori->nama_kategori }}</td>
         <td>
-            <a href="{{ route('kategori.edit', $kategori->id) }}">Edit</a>
+            <a href="{{ route('admin.kategori.edit', $kategori->id) }}">Edit</a>
 
-            <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.kategori.destroy', $kategori->id) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit">Hapus</button>

@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <h2>Edit Kategori</h2>
 
-<form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
+<form action="{{ route('admin.kategori.update', $kategori->id) }}" method="POST">
     @csrf
     @method('PUT')
 

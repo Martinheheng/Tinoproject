@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
 <h2>Data Alat</h2>
 
-<a href="{{ route('alat.create') }}">+ Tambah Alat</a>
+<a href="{{ route('admin.alat.create') }}">+ Tambah Alat</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -19,7 +19,7 @@
         <th>Aksi</th>
     </tr>
 
-    @foreach($alats as $alat)
+    @foreach($alat as $alat)
     <tr>
         <td>{{ $alat->nama_alat }}</td>
         <td>
@@ -28,8 +28,8 @@
         <td>{{ $alat->stok }}</td>
         <td>{{ $alat->harga_sewa }}</td>
         <td>
-            <a href="{{ route('alat.edit', $alat->id) }}">Edit</a>  
-            <form action="{{ route('alat.destroy', $alat->id) }}" 
+            <a href="{{ route('admin.alat.edit', $alat->id) }}">Edit</a>  
+            <form action="{{ route('admin.alat.destroy', $alat->id) }}" 
       method="POST" 
       style="display:inline;"
       onsubmit="return confirm('Yakin mau hapus alat ini?')">

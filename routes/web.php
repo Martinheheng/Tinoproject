@@ -13,6 +13,8 @@ use App\Http\Controllers\Peminjam\DashboardController as PeminjamDashboardContro
 use App\Http\Controllers\Peminjam\KeranjangController;
 use App\Http\Controllers\Peminjam\ProfileController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\LogAktifitasController;
 
 Route::get('/', function () {
 
@@ -40,7 +42,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/alat', AlatController::class)->names('alat');
     Route::resource('/kategori', KategoriController::class)->names('kategori');
-});
+    Route::resource('/user', UserController::class);
+    });
+    Route::get('/alat', [AlatController::class, 'index'])->name('index');
+    Route::get('/alat', [AlatController::class, 'index'])->name('create');
+    Route::get('/alat', [AlatController::class, 'index'])->name('edit');
+    Route::prefix('admin')->name('admin.')->group(function(){
+        Route::resource('users', UserController::class);
+        });
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::get('/admin/log', [LogAktifitasController::class, 'index'])->name('admin.log.index');
+        });
 
 //Route petugas
 Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
@@ -75,4 +87,5 @@ Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
     Route::get('/peminjaman/{id}/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+
 });

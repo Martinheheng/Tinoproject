@@ -5,7 +5,8 @@ namespace App\Observers;
 use App\Models\Log_aktifitas;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Carbon;
+    
 class PeminjamanObserver
 {
     public function created(Peminjaman $peminjaman)
@@ -15,7 +16,7 @@ class PeminjamanObserver
             'role'      => auth()->user()->role,
             'aksi'      => 'pinjam',
             'deskripsi' => 'Mengajukan peminjaman alat ID: ' . $peminjaman->alat_id,
-            'waktu'     => now(),
+            'waktu'     => Carbon::now(),
         ]);
     }
 
