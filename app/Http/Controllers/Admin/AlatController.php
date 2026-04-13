@@ -11,8 +11,8 @@ class AlatController extends Controller
 {
     public function index()
     {
-        $alats = Alat::with('kategori')->get();
-        return view('admin.alat.index', compact('alats'));
+        $alat = Alat::with('kategori')->get();
+        return view('admin.alat.index', compact('alat'));
     }
 
     public function create()
@@ -67,7 +67,7 @@ class AlatController extends Controller
 
         $alat->update($request->all());
 
-        return redirect()->route('alat.index')
+        return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Diupdate');
     }
 
@@ -76,7 +76,7 @@ class AlatController extends Controller
         $alat = Alat::findOrFail($id);
         $alat->delete();
 
-        return redirect()->route('alat.index')
+        return redirect()->route('admin.alat.index')
             ->with('success', 'Alat Berhasil Dihapus');
     }
 }

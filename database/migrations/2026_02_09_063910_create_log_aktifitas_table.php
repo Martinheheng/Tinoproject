@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-Schema::create('log_aktifitaas', function (Blueprint $table) {
+Schema::create('log_aktifitas', function (Blueprint $table) {
     $table->id();
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->string('role');
     $table->string('aksi');
+    $table->timestamp('waktu')->useCurrent();
     $table->string('target_type')->nullable();
     $table->unsignedBigInteger('target_id')->nullable();
     $table->text('deskripsi')->nullable();

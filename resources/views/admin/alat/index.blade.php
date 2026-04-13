@@ -19,7 +19,7 @@
         <th>Aksi</th>
     </tr>
 
-    @foreach($alats as $alat)
+    @foreach($alat as $alat)
     <tr>
         <td>{{ $alat->nama_alat }}</td>
         <td>

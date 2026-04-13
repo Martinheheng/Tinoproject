@@ -42,7 +42,14 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')
             ->with('success', 'User berhasil ditambahkan');
     }
+    public function edit($id)
+    {
+        
+    $user = User::findOrFail($id);
 
+    return view('admin.user.edit', compact('user'));
+
+    }
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id); // Huruf kecil 'f' pada findOrFail lebih standar

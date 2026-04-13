@@ -32,7 +32,7 @@
                     <td class="p-2 border">{{$user->role}}</td>
 
                     <td class="P-2 border flex gap-2">
-                        <a href="{{'admin.user.edit', $user->id}}" 
+                        <a href="{{route ('admin.user.edit', $user->id) }}" 
                             class="bg-green-400 px-2 py-2 rounded text-sm">
                             Edit
                         </a>
