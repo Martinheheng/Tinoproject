@@ -14,8 +14,10 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $transaksis = Peminjaman::orderBy('created_at', 'desc')
-            ->paginate(10);
+        $transaksis = Peminjaman::with(['details.alat', 'petugas'])
+                        ->where('user_id', auth()->id())
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(10);
 
         return view('peminjam.peminjaman.index', compact('transaksis'));
     }
@@ -39,16 +41,12 @@ class PeminjamanController extends Controller
         ]);
 
         return DB::transaction(function () use ($request) {
-
             $alat = Alat::lockForUpdate()->findOrFail($request->alat_id);
-
             if ($alat->stok < $request->jumlah_alat) {
                 throw new \Exception("Stok {$alat->nama_alat} tidak mencukupi.");
             }
 
-            $durasi = Carbon::parse($request->tanggal_pinjam)
-                ->diffInDays(Carbon::parse($request->tanggal_kembali));
-
+            $durasi = Carbon::parse($request->tanggal_pinjam)->diffInDays(Carbon::parse($request->tanggal_kembali));
             if ($durasi <= 0) {
                 throw new \Exception("Durasi tidak valid.");
             }
@@ -69,22 +67,37 @@ class PeminjamanController extends Controller
             ]);
 
             PeminjamanDetails::create([
-                'peminjaman_id' => $peminjaman->id,
+                'peminjaman_id' => $peminjaman->id_peminjaman, // gunakan id_peminjaman langsung
                 'alat_id' => $alat->id,
                 'jumlah' => $request->jumlah_alat
             ]);
 
             $alat->decrement('stok', $request->jumlah_alat);
 
-            return redirect()->route('peminjam.transaksi-berhasil', $peminjaman->id);
+            return redirect()->route('peminjam.transaksi-berhasil', $peminjaman->id_peminjaman);
         });
     }
 
-    public function show($id)
-    {
-        $peminjaman = Peminjaman::where('id_peminjaman', $id)->where('user_id', auth()->user()->id)->with('peminjaman_details.alat')->first();
+public function show($id)
+{
+    $peminjaman = Peminjaman::where('id_peminjaman', $id)
+                    ->where('user_id', auth()->id())
+                    ->with('details.alat')  // ← ganti dari 'peminjaman_details.alat'
+                    ->firstOrFail();
 
-        $peminjaman['jumlah_hari'] = Carbon::parse($peminjaman->tanggal_pengembalian)->diffInDays(Carbon::parse($peminjaman->tanggal_pinjam));
+        $peminjaman['jumlah_hari'] = Carbon::parse($peminjaman->tanggal_pengembalian)
+                                        ->diffInDays(Carbon::parse($peminjaman->tanggal_pinjam));
         return view('peminjam.transaksi-berhasil', compact('peminjaman'));
+    }
+
+    // Optional: batalkan peminjaman jika masih menunggu
+    public function cancel($id)
+    {
+        $peminjaman = Peminjaman::where('user_id', auth()->id())
+                        ->where('status', 'menunggu')
+                        ->findOrFail($id);
+        $peminjaman->status = 'dibatalkan';
+        $peminjaman->save();
+        return redirect()->route('peminjam.riwayat-penyewaan')->with('success', 'Peminjaman dibatalkan.');
     }
 }

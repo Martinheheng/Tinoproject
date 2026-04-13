@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Keranjang'])
+@extends('layouts.app', ['dengan_sidebar' => true], ['title' => 'Keranjang'])
 
 @section('content')
     <div class="max-w-5xl mx-auto p-6 space-y-6">

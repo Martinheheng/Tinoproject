@@ -45,7 +45,7 @@
                     </p>
                     <p class="mt-2">
                         <span class="text-slate-500">Jumlah Hari:</span><br>
-                        <strong>{{ $peminjaman->jumlah_hari }}</strong>
+                        <strong>{{ $peminjaman->jumlah_hari ?? 0 }}</strong>
                     </p>
                 </div>
             </div>
@@ -62,25 +62,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($peminjaman->peminjaman_details as $detail)
+                        @forelse($peminjaman->details as $detail)
                         <tr class="border-b hover:bg-slate-50">
                             <td class="p-3 font-medium">
-                                {{ $detail->alat->nama_alat }}
+                                {{ optional($detail->alat)->nama_alat ?? 'Alat tidak ditemukan' }}
                             </td>
-
                             <td class="p-3">
-                                Rp {{ number_format($detail->alat->harga_sewa,0,',','.') }}
+                                Rp {{ number_format(optional($detail->alat)->harga_sewa ?? 0, 0, ',', '.') }}
                             </td>
-
                             <td class="p-3 text-center">
                                 {{ $detail->jumlah }}
                             </td>
-
                             <td class="p-3 text-right font-semibold">
-                                Rp {{ number_format($detail->alat->harga_sewa * $detail->jumlah,0,',','.') }}
+                                Rp {{ number_format((optional($detail->alat)->harga_sewa ?? 0) * $detail->jumlah, 0, ',', '.') }}
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-gray-500 py-4">
+                                Tidak ada detail alat
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -97,17 +100,17 @@
 
                 <div class="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp {{ number_format($peminjaman->subtotal,0,',','.') }}</span>
+                    <span>Rp {{ number_format($peminjaman->subtotal, 0, ',', '.') }}</span>
                 </div>
 
                 <div class="flex justify-between">
                     <span>Deposit (50%)</span>
-                    <span>Rp {{ number_format($peminjaman->deposit,0,',','.') }}</span>
+                    <span>Rp {{ number_format($peminjaman->deposit, 0, ',', '.') }}</span>
                 </div>
 
                 <div class="border-t pt-4 flex justify-between font-bold text-base">
                     <span>Total</span>
-                    <span>Rp {{ number_format($peminjaman->total,0,',','.') }}</span>
+                    <span>Rp {{ number_format($peminjaman->total, 0, ',', '.') }}</span>
                 </div>
 
                 <div class="mt-6">

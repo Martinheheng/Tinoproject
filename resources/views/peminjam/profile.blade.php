@@ -26,7 +26,7 @@
                             {{ $user->name }}
                         </h1>
                         <p class="text-slate-500 mt-1">
-                            Role: 
+                            Role:
                             <span class="inline-block px-3 py-1 text-sm rounded-full bg-indigo-100 text-indigo-600 font-medium">
                                 {{ ucfirst($user->role) }}
                             </span>

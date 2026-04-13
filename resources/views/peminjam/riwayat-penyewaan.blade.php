@@ -41,7 +41,7 @@
                             dipinjam
                         </td>
                     </tr>
-                
+
                     <tr>
                         <td colspan="5" class="px-4 py-6 text-center text-gray-500">
                             Belum ada riwayat penyewaan.

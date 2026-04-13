@@ -110,7 +110,7 @@
                             <div class="w-10 h-10 rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 flex items-center justify-center  text-white text-sm font-semibold shadow">
                                 {{ strtoupper(auth()->user()->name[0]) }}
                             </div>
-    
+
                             <div class="hidden sm:flex flex-col text-sm leading-tight">
                                 <span class="font-semibold text-gray-800">
                                     {{ auth()->user()->name }}
@@ -150,7 +150,7 @@
                         <a href="{{ route('peminjam.dashboard') }}" class="flex items-center gap-3">
                             <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..." alt="Profile"
                                 class="w-10 h-10 rounded-full object-cover">
-    
+
                             <span class="text-xl font-semibold text-gray-800 tracking-tight">
                                 Fish Gear
                             </span>

@@ -37,16 +37,13 @@ Route::get('/register', [RegisterController::class, 'showRegister'])->name('regi
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-//ROUTE ADMIN 
+//ROUTE ADMIN
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/alat', AlatController::class)->names('alat');
     Route::resource('/kategori', KategoriController::class)->names('kategori');
     Route::resource('/user', UserController::class);
     });
-    Route::get('/alat', [AlatController::class, 'index'])->name('index');
-    Route::get('/alat', [AlatController::class, 'index'])->name('create');
-    Route::get('/alat', [AlatController::class, 'index'])->name('edit');
     Route::prefix('admin')->name('admin.')->group(function(){
         Route::resource('users', UserController::class);
         });
@@ -56,16 +53,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 //Route petugas
 Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [PetugasPeminjaman::class, 'index'])->name('dashboard');
     Route::get('/peminjaman', [PetugasPeminjaman::class, 'index'])->name('peminjaman.index');
     Route::post('/peminjaman/{id}/approve', [PetugasPeminjaman::class, 'approve'])->name('peminjaman.approve');
     Route::post('/peminjaman/{id}/reject', [PetugasPeminjaman::class, 'reject'])->name('peminjaman.reject');
     });
-    
+
 //Route Peminjam
 Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
     Route::get('/dashboard', [PeminjamDashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::get('/detail-alat/{id_alat}', [PeminjamAlatController::class, 'show'])->name('detail-alat');
 
     Route::get('/proses-penyewaan/{id_alat}', [PeminjamanController::class, 'create'])->name('proses-penyewaan');

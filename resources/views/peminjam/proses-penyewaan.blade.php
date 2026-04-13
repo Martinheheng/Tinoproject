@@ -16,7 +16,7 @@
                 <div class="bg-white rounded-xl shadow p-6 h-fit space-y-6">
 
                     <div class="flex gap-4">
-                        <img src="https://via.placeholder.com/100"
+                        <img src="{{ Storage::url($alat->foto_alat) }}"
                             class="rounded-lg w-24 h-24 object-cover">
 
                         <div>
@@ -143,7 +143,7 @@
                                 <li>Deposit hangus jika alat hilang</li>
                             </ul>
                         </div>
-    
+
                         <div class="space-y-2">
                             <p><strong>Durasi fleksibel</strong> (min 1 hari, max 30 hari)</p>
                             <p><strong>Deposit 50%</strong> dari harga sewa</p>
@@ -160,11 +160,11 @@
 
 
             {{-- ================= RIGHT SIDE ================= --}}
-            
+
 
         </form>
     </div>
-    
+
 @endsection
 
 @section('script')

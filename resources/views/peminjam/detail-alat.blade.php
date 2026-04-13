@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Detail Alat'])
+@extends('layouts.app', ['dengan_sidebar' => true],['title' => 'Detail Alat'])
 
 @section('content')
     @php
@@ -26,7 +26,7 @@
             <div class="lg:col-span-4">
 
                 <div class="bg-white rounded-xl shadow p-4">
-                    <img src="{{ $alat->foto_alat }}" class="w-full rounded-lg object-cover">
+                    <img src="{{ Storage::url($alat->foto_alat) }}" class="w-full rounded-lg object-cover">
                 </div>
 
             </div>
@@ -54,6 +54,9 @@
                     <img src="https://picsum.photos/100" class="w-12 h-12 rounded-full object-cover">
 
                     <div>
+                        <div class="bg-white rounded-xl shadow-2">
+
+                        </div>
                         <div class="font-semibold text-gray-800">
                             Admin FISH GEAR
                         </div>

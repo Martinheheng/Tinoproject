@@ -51,7 +51,7 @@
                     @endif
 
                     <div class="aspect-square overflow-hidden">
-                        <img src="{{ $item->foto_alat }}"
+                        <img src="{{ Storage::url($item->foto_alat) }}"
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     </div>
 

@@ -68,19 +68,20 @@
                         </td>
 
                         <td class="px-4 py-3">
-                            @if($trx->status == 'dikembalikan')
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">
-                                    Dikembalikan
-                                </span>
-                            @elseif($trx->status == 'menunggu')
-                                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600">
-                                    Menunggu
-                                </span>
-                            @else
-                                <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-600">
-                                    Dibatalkan
-                                </span>
-                            @endif
+                            @php
+                                $statusMap = [
+                                    'menunggu'    => ['label' => 'Menunggu', 'class' => 'bg-yellow-100 text-yellow-600'],
+                                    'disetujui'   => ['label' => 'Disetujui', 'class' => 'bg-blue-100 text-blue-600'],
+                                    'dipinjam'    => ['label' => 'Dipinjam', 'class' => 'bg-indigo-100 text-indigo-600'],
+                                    'ditolak'     => ['label' => 'Ditolak', 'class' => 'bg-red-100 text-red-600'],
+                                    'dibatalkan'  => ['label' => 'Dibatalkan', 'class' => 'bg-gray-100 text-gray-600'],
+                                    'dikembalikan'=> ['label' => 'Dikembalikan', 'class' => 'bg-green-100 text-green-600'],
+                                ];
+                                $status = $statusMap[$trx->status] ?? ['label' => ucfirst($trx->status), 'class' => 'bg-gray-100 text-gray-600'];
+                            @endphp
+                            <span class="px-2 py-1 text-xs rounded-full {{ $status['class'] }}">
+                                {{ $status['label'] }}
+                            </span>
                         </td>
 
                         <td class="px-4 py-3">
