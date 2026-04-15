@@ -21,11 +21,12 @@ class PeminjamanController extends Controller
     // Menampilkan daftar peminjaman yang menunggu persetujuan
     public function index()
     {
-        $peminjaman = Peminjaman::with(['user', 'details.alat'])
-                        ->where('status', 'menunggu')
-                        ->latest()
-                        ->get();
-        return view('petugas.peminjaman.index', compact('peminjaman'));
+        // Perbaikan: 'user' bukan 'users', 'details' bukan 'details_alat'
+        $transaksis = Peminjaman::with(['user', 'details'])
+                    ->where('status', 'menunggu')
+                    ->latest()
+                    ->paginate(10);
+        return view('petugas.peminjaman.index', compact('transaksis'));
     }
 
     // Menyetujui peminjaman
@@ -77,7 +78,8 @@ class PeminjamanController extends Controller
     // Menampilkan daftar peminjaman yang perlu dipantau pengembaliannya
     public function pengembalianIndex()
     {
-        $peminjaman = Peminjaman::with(['user', 'details.alat'])
+        // Perbaikan: gunakan 'user' dan 'details' sesuai relasi
+        $peminjaman = Peminjaman::with(['user', 'details'])
                         ->whereIn('status', ['disetujui', 'dipinjam'])
                         ->latest()
                         ->get();
@@ -103,7 +105,7 @@ class PeminjamanController extends Controller
 
             // Catat pengembalian (pastikan tabel pengembalian punya kolom petugas_id)
             Pengembalian::create([
-                'peminjaman_id' => $peminjaman->id_peminjaman,
+                'peminjaman_id' => $peminjaman->id, // perbaikan: gunakan 'id' jika itu primary key
                 'tanggal_kembali_real' => $request->tanggal_kembali_real,
                 'denda' => $request->denda ?? 0,
                 'catatan' => $request->catatan,
@@ -120,14 +122,33 @@ class PeminjamanController extends Controller
         }
     }
 
-    // Laporan (tidak berubah)
+    // Laporan - menampilkan form filter
     public function laporanIndex()
     {
         return view('petugas.laporan.index');
     }
 
+    // Laporan - cetak PDF
     public function laporanCetak(Request $request)
     {
-        // ... sama seperti sebelumnya
+        $request->validate([
+            'tanggal_awal' => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+        ]);
+
+        $query = Peminjaman::with(['user', 'details.alat']);
+
+        // Filter tanggal
+        $query->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
+
+        // Filter status (jika ada)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $peminjaman = $query->orderBy('created_at', 'desc')->get();
+
+        $pdf = Pdf::loadView('petugas.laporan.cetak', compact('peminjaman', 'request'));
+        return $pdf->download('laporan_peminjaman_' . date('Y-m-d') . '.pdf');
     }
 }

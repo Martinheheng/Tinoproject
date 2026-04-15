@@ -1,4 +1,6 @@
-@extends('layouts.app', ['dengan_sidebar' => true])
+@extends('layouts.petugas')
+
+@section('title', 'Daftar Peminjaman Menunggu')
 
 @section('content')
 <div class="container">

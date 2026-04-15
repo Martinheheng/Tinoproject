@@ -100,4 +100,16 @@ public function show($id)
         $peminjaman->save();
         return redirect()->route('peminjam.riwayat-penyewaan')->with('success', 'Peminjaman dibatalkan.');
     }
+    public function cancel($id)
+{
+    $peminjaman = Peminjaman::where('id', $id)
+                  ->where('user_id', auth()->id())
+                  ->where('status', 'menunggu')
+                  ->firstOrFail();
+
+    $peminjaman->update(['status' => 'dibatalkan']);
+
+    return redirect()->route('peminjam.peminjaman.index')
+                     ->with('success', 'Peminjaman berhasil dibatalkan.');
+}
 }

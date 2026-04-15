@@ -57,14 +57,24 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
     Route::get('/peminjaman', [PetugasPeminjaman::class, 'index'])->name('peminjaman.index');
     Route::post('/peminjaman/{id}/approve', [PetugasPeminjaman::class, 'approve'])->name('peminjaman.approve');
     Route::post('/peminjaman/{id}/reject', [PetugasPeminjaman::class, 'reject'])->name('peminjaman.reject');
-    });
+
+    // PERBAIKI INI
+    Route::get('/pengembalian', [PetugasPeminjaman::class, 'pengembalianIndex'])->name('pengembalian.index');
+
+    // Tambahkan route untuk proses pengembalian (jika belum)
+    Route::post('/pengembalian/{id}/proses', [PetugasPeminjaman::class, 'prosesKembali'])->name('pengembalian.proses');
+
+    // Route laporan
+    Route::get('/laporan', [PetugasPeminjaman::class, 'laporanIndex'])->name('laporan.index');
+    Route::post('/laporan/cetak', [PetugasPeminjaman::class, 'laporanCetak'])->name('laporan.cetak');
+});
 
 //Route Peminjam
 Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->name('peminjam.')->group(function () {
     Route::get('/dashboard', [PeminjamDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/detail-alat/{id_alat}', [PeminjamAlatController::class, 'show'])->name('detail-alat');
-
+    Route::post('/peminjaman/{id}/cancel', [PeminjamanController::class, 'cancel'])->name('peminjaman.cancel');
     Route::get('/proses-penyewaan/{id_alat}', [PeminjamanController::class, 'create'])->name('proses-penyewaan');
     Route::post('/proses-penyewaan', [PeminjamanController::class, 'store'])->name('proses-penyewaan.store');
     Route::get('/transaksi-berhasil/{id_transaksi}', [PeminjamanController::class, 'show'])->name('transaksi-berhasil');
