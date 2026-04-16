@@ -1,10 +1,10 @@
 @extends('layouts.petugas')
 
-@section('title', 'Daftar Peminjaman Menunggu')
+@section('title', 'Peminjaman Menunggu Persetujuan')
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Riwayat Peminjaman Saya</h2>
+<h2 class="mb-4">Peminjaman Menunggu Persetujuan</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -67,18 +67,22 @@
                     </td>
                     <td>
                         @if($transaksi->status == 'menunggu')
-                            <form action="{{ route('peminjam.peminjaman.cancel', $transaksi->id_peminjaman) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button class="btn btn-sm btn-warning" onclick="return confirm('Batalkan peminjaman?')">Batalkan</button>
-                            </form>
-                        @elseif($transaksi->status == 'disetujui')
-                            <span class="text-muted">Menunggu pengambilan</span>
-                        @elseif($transaksi->status == 'dipinjam')
-                            <span class="text-muted">Sedang dipinjam</span>
-                        @elseif($transaksi->status == 'dikembalikan')
-                            <span class="text-muted">Selesai</span>
+                            <div class="btn-group" role="group">
+                                <form action="{{ route('petugas.peminjaman.approve', $transaksi->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Setujui peminjaman ini? Stok akan dikurangi.')">
+                                        <i class="fas fa-check"></i> Setujui
+                                    </button>
+                                </form>
+                                <form action="{{ route('petugas.peminjaman.reject', $transaksi->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tolak peminjaman ini?')">
+                                        <i class="fas fa-times"></i> Tolak
+                                    </button>
+                                </form>
+                            </div>
                         @else
-                            <span class="text-muted">-</span>
+                            <span class="text-muted">Tidak dapat diubah</span>
                         @endif
                     </td>
                 </tr>
